@@ -1,0 +1,177 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import projects from '../data/projects';
+
+const Projects = () => {
+  const navigate = useNavigate();
+  const [expandedFolders, setExpandedFolders] = useState({});
+
+  const toggleFolder = (folderName) => {
+    setExpandedFolders(prev => ({
+      ...prev,
+      [folderName]: !prev[folderName]
+    }));
+  };
+
+  const miscProjects = [
+    {
+      folderName: "API Projects",
+      icon: "📡",
+      projects: [
+        {
+          id: 1,
+          title: "SkyPulse",
+          description: "Real-time weather application with interactive maps and detailed forecasts",
+          image: "webp/skypulse.webp",
+          technologies: ["React", "OpenWeatherMap API", "Mapbox API", "CSS", "HTML"],
+          link: "https://skypulse.siftion.com/"
+        },
+        {
+          id: 2,
+          title: "Meow Gen",
+          description: "A fun web app that generates random cat GIFs using the Cat API",
+          image: "webp/meow-gen.webp",
+          technologies: ["React", "API Integration", "CSS", "HTML"],
+          link: "https://meowgen.siftion.com/"
+        }
+      ]
+    }
+  ];
+
+  return (
+    <section id="projects" className="bg-[#bebde2] text-[#03012f] py-20 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+          Featured Projects
+        </h2>
+
+        {/* Main Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              className="relative group cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              onClick={() => navigate(`/projects/${project.slug}`)}
+            >
+              <div className="relative overflow-hidden rounded-xl shadow-lg bg-[#030a1f] group-hover:rounded-[40px] transition-all duration-500 h-full">
+                <div className="relative aspect-w-16 aspect-h-9">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="object-cover w-full h-full transform group-hover:scale-110 transition-all duration-700 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+                <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="text-2xl font-bold mb-2 text-white">{project.title}</h3>
+                    <p className="text-sm text-gray-200 mb-4">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.slice(0, 3).map((tech, techIndex) => (
+                        <span
+                          key={techIndex}
+                          className="px-3 py-1 bg-[#d1cdc2]/20 text-white rounded-full text-xs"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > 3 && (
+                        <span className="px-3 py-1 bg-[#d1cdc2]/20 text-white rounded-full text-xs">
+                          +{project.technologies.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/projects/${project.slug}`);
+                      }}
+                      className="inline-block px-6 py-2 bg-[#d1cdc2] text-[#030a1f] rounded-full font-medium hover:bg-white transition-colors duration-300"
+                    >
+                      Learn More
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Other Projects Section */}
+        <div className="mt-20">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+            Other Projects
+          </h2>
+          
+          {miscProjects.map((category, catIndex) => (
+            <div key={catIndex} className="mb-12">
+              <button
+                onClick={() => toggleFolder(category.folderName)}
+                className="flex items-center text-2xl font-semibold mb-6 hover:text-[#d1cdc2] transition-colors"
+              >
+                <span className="mr-2">{category.icon}</span>
+                {category.folderName}
+                <span className="ml-2 text-xl">
+                  {expandedFolders[category.folderName] ? '−' : '+'}
+                </span>
+              </button>
+              
+              <AnimatePresence>
+                {expandedFolders[category.folderName] && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {category.projects.map((project, projIndex) => (
+                        <div
+                          key={projIndex}
+                          className="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-colors"
+                        >
+                          <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                          <p className="text-sm text-gray-200 mb-4">{project.description}</p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {project.technologies.map((tech, techIndex) => (
+                              <span
+                                key={techIndex}
+                                className="px-3 py-1 bg-[#d1cdc2]/20 text-white rounded-full text-xs"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block px-4 py-2 bg-[#d1cdc2] text-[#030a1f] rounded-full text-sm font-medium hover:bg-white transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            View Project
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
+
+        <div className="text-center mt-20">
+          <p className="text-2xl text-[#030a1f]/70">Adding more projects soon!</p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Projects;
