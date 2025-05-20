@@ -37,7 +37,8 @@
 
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#030a1f" />
-  <link id="dynamic-favicon" rel="icon" type="image/png" href="/favicon-focused.png" />
+  <!-- Initial favicon - will be replaced by script -->
+  <link rel="icon" type="image/png" href="/favicon-focused.png" />
 
   <!-- Preload critical assets -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -83,23 +84,63 @@
   <noscript>Please enable JavaScript to view this website.</noscript>
   <script type="module" src="/src/main.jsx"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const focusedFavicon = '/favicon-focused.png';
-      const unfocusedFavicon = '/favicon-unfocused.png';
-      const faviconTag = document.getElementById('dynamic-favicon');
-      function setFavicon(src) {
-        if (faviconTag) {
-          faviconTag.href = src + '?v=' + new Date().getTime();
-        }
+    // Remove no-js class if JavaScript is enabled
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+    
+    // Firefox-compatible favicon switcher using complete element replacement
+    (function() {
+      // URLs of the favicon images
+      const focusedFaviconUrl = '/favicon-focused.png';
+      const unfocusedFaviconUrl = '/favicon-unfocused.png';
+      
+      // Function to completely replace the favicon element
+      function setFavicon(iconUrl) {
+        // Remove any existing favicons
+        Array.from(document.querySelectorAll('link[rel*="icon"]')).forEach(el => el.parentNode.removeChild(el));
+        
+        // Create and add a new favicon link element
+        const link = document.createElement('link');
+        link.type = 'image/png';
+        link.rel = 'icon';
+        link.href = iconUrl;
+        document.getElementsByTagName('head')[0].appendChild(link);
       }
-      document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-          setFavicon(unfocusedFavicon);
+      
+      // Set the initial favicon state
+      setFavicon(document.hasFocus() ? focusedFaviconUrl : unfocusedFaviconUrl);
+      
+      // Handle visibility changes
+      document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+          setFavicon(focusedFaviconUrl);
         } else {
-          setFavicon(focusedFavicon);
+          setFavicon(unfocusedFaviconUrl);
         }
       });
-    });
+      
+      // Also handle window focus/blur as a backup method
+      window.addEventListener('focus', function() {
+        setFavicon(focusedFaviconUrl);
+      });
+      
+      window.addEventListener('blur', function() {
+        setFavicon(unfocusedFaviconUrl);
+      });
+    })();
+    
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function(registration) {
+            console.log('ServiceWorker registration successful');
+          })
+          .catch(function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
   </script>
 </body>
 

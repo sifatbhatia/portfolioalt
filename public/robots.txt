@@ -1,18 +1,70 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
+
+# Allow all crawlers
+Allow: /
+
+# Disallow access to private or non-essential areas
 Disallow: /api/
 Disallow: /admin/
+Disallow: /private/
+Disallow: /secret/
 Disallow: /node_modules/
 Disallow: /dist/
 Disallow: /build/
 Disallow: /test/
 Disallow: /backup/
 Disallow: /temp/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
 
-# Primary sitemap (contains image entries)
+# Crawl-delay: 10  # Uncomment and adjust if needed to limit crawl rate
+
+# Sitemaps
 Sitemap: https://siftion.com/sitemap.xml
-
-# Optional: extra sitemaps if you truly split them
+# Sitemap: https://siftion.com/sitemap-images.xml
 # Sitemap: https://siftion.com/sitemap-videos.xml
 
-# Host directive (Yandex only) – keep a single one
+# Host directive (Yandex only)
 Host: siftion.com
+
+# Allow all search engines to index the site
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+User-agent: Baiduspider
+Allow: /
+User-agent: Yandex
+Allow: /
+
+# Block AI crawlers that may be using your content without permission
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# Block scrapers and bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

@@ -1,173 +1,293 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import projects from '../data/projects';
 
 const Projects = () => {
-  const navigate = useNavigate();
-  const [expandedFolders, setExpandedFolders] = useState({});
+  const [hoveredProject, setHoveredProject] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const toggleFolder = (folderName) => {
-    setExpandedFolders(prev => ({
-      ...prev,
-      [folderName]: !prev[folderName]
-    }));
+  // Separate featured and misc projects
+  const featuredProjects = [];
+  const miscProjects = [];
+  
+  projects.forEach(project => {
+    if (project.category === 'misc') {
+      miscProjects.push(project);
+    } else {
+      featuredProjects.push(project);
+    }
+  });
+  
+  // Sort projects by ID
+  const sortedFeaturedProjects = [...featuredProjects].sort((a, b) => a.id - b.id);
+  const sortedMiscProjects = [...miscProjects].sort((a, b) => a.id - b.id);
+
+  // Handle project hover
+  const handleProjectHover = (index) => {
+    if (!isMobile) {
+      setHoveredProject(index);
+    }
+  };
+  
+  // Handle mouse leave
+  const handleProjectLeave = () => {
+    setHoveredProject(null);
   };
 
-  const miscProjects = [
-    {
-      folderName: "API Projects",
-      icon: "📡",
-      projects: [
-        {
-          id: 1,
-          title: "SkyPulse",
-          description: "Real-time weather application with interactive maps and detailed forecasts",
-          image: "webp/skypulse.webp",
-          technologies: ["React", "OpenWeatherMap API", "Mapbox API", "CSS", "HTML"],
-          link: "https://skypulse.siftion.com/"
-        },
-        {
-          id: 2,
-          title: "Meow Gen",
-          description: "A fun web app that generates random cat GIFs using the Cat API",
-          image: "webp/meow-gen.webp",
-          technologies: ["React", "API Integration", "CSS", "HTML"],
-          link: "https://meowgen.siftion.com/"
-        }
-      ]
+  // Check if mobile on mount and window resize
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     }
-  ];
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        damping: 15,
+        stiffness: 100
+      }
+    },
+    hover: {
+      scale: 1.02,
+      transition: {
+        type: 'spring',
+        damping: 15,
+        stiffness: 200
+      }
+    }
+  };
+
+  const previewVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: {
+        type: 'spring',
+        damping: 25,
+        stiffness: 300
+      }
+    },
+    exit: { 
+      opacity: 0,
+      x: 50,
+      transition: { duration: 0.2 }
+    }
+  };
 
   return (
-    <section id="projects" className="bg-[#bebde2] text-[#03012f] py-20 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
-          Featured Projects
-        </h2>
-
-        {/* Main Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-          {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              className="relative group cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              onClick={() => navigate(`/projects/${project.slug}`)}
-            >
-              <div className="relative overflow-hidden rounded-xl shadow-lg bg-[#030a1f] group-hover:rounded-[40px] transition-all duration-500 h-full">
-                <div className="relative aspect-w-16 aspect-h-9">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="object-cover w-full h-full transform group-hover:scale-110 transition-all duration-700 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-                <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-2xl font-bold mb-2 text-white">{project.title}</h3>
-                    <p className="text-sm text-gray-200 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.slice(0, 3).map((tech, techIndex) => (
-                        <span
-                          key={techIndex}
-                          className="px-3 py-1 bg-[#d1cdc2]/20 text-white rounded-full text-xs"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.technologies.length > 3 && (
-                        <span className="px-3 py-1 bg-[#d1cdc2]/20 text-white rounded-full text-xs">
-                          +{project.technologies.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/projects/${project.slug}`);
-                      }}
-                      className="inline-block px-6 py-2 bg-[#d1cdc2] text-[#030a1f] rounded-full font-medium hover:bg-white transition-colors duration-300"
-                    >
-                      Learn More
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+    <section className="min-h-screen bg-gradient-to-b from-[#aeaccd] to-[#aeaccd] py-24 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-20 max-w-3xl mx-auto">
+          <span className="text-[#0c1a3d] font-mono text-sm tracking-wider mb-4 block">
+            SELECTED WORK
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-[#0c1a3d] mb-6 leading-tight">
+            Projects & Case Studies
+          </h2>
+          <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-[#0c1a3d] to-transparent mx-auto"></div>
         </div>
 
-        {/* Other Projects Section */}
-        <div className="mt-20">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Other Projects
-          </h2>
-          
-          {miscProjects.map((category, catIndex) => (
-            <div key={catIndex} className="mb-12">
-              <button
-                onClick={() => toggleFolder(category.folderName)}
-                className="flex items-center text-2xl font-semibold mb-6 hover:text-[#d1cdc2] transition-colors"
+        <div className="relative">
+          {/* Project Grid */}
+          <div className="container mx-auto px-4 py-12 md:py-16 lg:py-20">
+            {/* Featured Projects Section */}
+            <div className="mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+                Featured Projects
+              </h2>
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
               >
-                <span className="mr-2">{category.icon}</span>
-                {category.folderName}
-                <span className="ml-2 text-xl">
-                  {expandedFolders[category.folderName] ? '−' : '+'}
-                </span>
-              </button>
-              
-              <AnimatePresence>
-                {expandedFolders[category.folderName] && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
+                {sortedFeaturedProjects.map((project, index) => (
+                  <motion.div 
+                    key={project.id}
+                    className="relative group h-full"
+                    custom={index}
+                    variants={itemVariants}
+                    whileHover="hover"
+                    onMouseEnter={() => handleProjectHover(project.id)}
+                    onMouseLeave={handleProjectLeave}
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {category.projects.map((project, projIndex) => (
-                        <div
-                          key={projIndex}
-                          className="bg-white/10 backdrop-blur-sm p-6 rounded-xl hover:bg-white/20 transition-colors"
-                        >
-                          <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                          <p className="text-sm text-gray-200 mb-4">{project.description}</p>
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {project.technologies.map((tech, techIndex) => (
-                              <span
-                                key={techIndex}
-                                className="px-3 py-1 bg-[#d1cdc2]/20 text-white rounded-full text-xs"
-                              >
+                    <Link 
+                      to={`/projects/${project.slug}`} 
+                      className="absolute inset-0 z-10"
+                      aria-label={`View ${project.title} details`}
+                    />
+                    <div className="flex flex-col h-full bg-gradient-to-br from-[#03012f] to-[#0a0a2a] rounded-2xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-black/30 relative">
+                      {/* Project Image Overlay */}
+                      <div className="absolute inset-0 z-0 overflow-hidden opacity-0 group-hover:opacity-40 transition-opacity duration-500">
+                        <img 
+                          src={project.image} 
+                          alt={project.title}
+                          className="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-1000 ease-out"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDMwMTJmIi8+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOCIgZmlsbD0iI2QxY2RjMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+SW1hZ2UgTm90IEF2YWlsYWJsZTwvdGV4dD48L3N2Zz4=';
+                          }}
+                        />
+                      </div>
+                      
+                      <div className="relative z-10 p-8 flex-1 flex flex-col">
+                        <div className="flex-1">
+                          <div className="flex items-start space-x-4 mb-6">
+                            <span className="text-[#d1cdc2] font-mono text-sm w-6 flex-shrink-0 mt-1">
+                              {String(index + 1).padStart(2, '0')}
+                            </span>
+                            <div className="flex-1">
+                              <h3 className="text-2xl font-semibold text-white mb-2 group-hover:text-white transition-colors">
+                                {project.title}
+                              </h3>
+                              <p className="text-[#d1cdc2]/90 text-base leading-relaxed mb-6 group-hover:text-white/90 transition-colors">
+                                {project.description}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          {project.technologies && project.technologies.slice(0, 3).map((tech, i) => (
+                            <span key={i} className="inline-block bg-[#0c1a3d] bg-opacity-50 text-[#d1cdc2] text-xs font-mono px-3 py-1 rounded-full">
+                              {tech}
+                            </span>
+                          ))}
+                          {project.technologies && project.technologies.length > 3 && (
+                            <span className="inline-block bg-[#0c1a3d] bg-opacity-50 text-[#d1cdc2] text-xs font-mono px-3 py-1 rounded-full">
+                              +{project.technologies.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Misc Projects Section */}
+            {sortedMiscProjects.length > 0 && (
+              <div className="mt-24">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+                  Misc Projects
+                </h2>
+                <motion.div 
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {sortedMiscProjects.map((project, index) => (
+                    <motion.div 
+                      key={project.id}
+                      className="relative group h-full"
+                      custom={index}
+                      variants={itemVariants}
+                      whileHover="hover"
+                      onMouseEnter={() => handleProjectHover(project.id)}
+                      onMouseLeave={handleProjectLeave}
+                    >
+                      <Link 
+                        to={`/projects/${project.slug}`} 
+                        className="absolute inset-0 z-10"
+                        aria-label={`View ${project.title} details`}
+                      />
+                      <div className="flex flex-col h-full bg-gradient-to-br from-[#03012f] to-[#0a0a2a] rounded-2xl overflow-hidden border border-white/5 hover:border-white/10 transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-black/30 relative">
+                        {/* Project Image Overlay */}
+                        <div className="absolute inset-0 z-0 overflow-hidden opacity-0 group-hover:opacity-40 transition-opacity duration-500">
+                          <img 
+                            src={project.image} 
+                            alt={project.title}
+                            className="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-1000 ease-out"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDMwMTJmIi8+PHRleHQgeD0iNTAiIHk9IjUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOCIgZmlsbD0iI2QxY2RjMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+SW1hZ2UgTm90IEF2YWlsYWJsZTwvdGV4dD48L3N2Zz4=';
+                            }}
+                          />
+                        </div>
+                        
+                        <div className="relative z-10 p-8 flex-1 flex flex-col">
+                          <div className="flex-1">
+                            <div className="flex items-start space-x-4 mb-6">
+                              <span className="text-[#d1cdc2] font-mono text-sm w-6 flex-shrink-0 mt-1">
+                                {String(index + 1).padStart(2, '0')}
+                              </span>
+                              <div className="flex-1">
+                                <h3 className="text-2xl font-semibold text-white mb-2 group-hover:text-white transition-colors">
+                                  {project.title}
+                                </h3>
+                                <p className="text-[#d1cdc2]/90 text-base leading-relaxed mb-6 group-hover:text-white/90 transition-colors">
+                                  {project.description}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-2 mt-4">
+                            {project.technologies && project.technologies.slice(0, 3).map((tech, i) => (
+                              <span key={i} className="inline-block bg-[#0c1a3d] bg-opacity-50 text-[#d1cdc2] text-xs font-mono px-3 py-1 rounded-full">
                                 {tech}
                               </span>
                             ))}
+                            {project.technologies && project.technologies.length > 3 && (
+                              <span className="inline-block bg-[#0c1a3d] bg-opacity-50 text-[#d1cdc2] text-xs font-mono px-3 py-1 rounded-full">
+                                +{project.technologies.length - 3} more
+                              </span>
+                            )}
                           </div>
-                          <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-block px-4 py-2 bg-[#d1cdc2] text-[#030a1f] rounded-full text-sm font-medium hover:bg-white transition-colors"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            View Project
-                          </a>
                         </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+            )}
+          </div>
 
-        <div className="text-center mt-20">
-          <p className="text-2xl text-[#030a1f]/70">Adding more projects soon!</p>
+          {/* Project Preview - shown on hover on desktop */}
+          {!isMobile && (
+            <AnimatePresence mode="wait">
+              {hoveredProject !== null && (
+                <motion.div 
+                  key={hoveredProject}
+                  className="hidden lg:block absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-16 w-72 h-auto z-20"
+                  variants={previewVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  {/* Preview content here if needed */}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
         </div>
       </div>
     </section>
