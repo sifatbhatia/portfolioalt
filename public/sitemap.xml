@@ -4,30 +4,163 @@
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"
 >
+  <!-- Home Page -->
   <url>
     <loc>https://siftion.com/</loc>
-    <lastmod>2025-05-03</lastmod>
+    <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-
-    <!-- en locale (keep if you serve i18n) -->
     <xhtml:link rel="alternate" hreflang="en" href="https://siftion.com/" />
-
-    <!-- Image 1 -->
     <image:image>
-      <image:loc>
-        https://siftion.com/images/sifat-bhatia-los-angeles-web-developer-portrait-bw.jpg
-      </image:loc>
-      <image:title>Sifat Bhatia — Architectural monochrome portrait</image:title>
+      <image:loc>https://siftion.com/images/sifat-bhatia-los-angeles-web-developer-portrait-bw.jpg</image:loc>
+      <image:title>Sifat Bhatia — Los Angeles Web Developer</image:title>
+      <image:caption>Professional portrait of Sifat Bhatia, a Los Angeles-based web developer and software engineer</image:caption>
     </image:image>
+  </url>
 
-    <!-- Image 2 -->
+  <!-- About Page -->
+  <url>
+    <loc>https://siftion.com/about</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
     <image:image>
-      <image:loc>
-        https://siftion.com/images/sifat-bhatia-los-angeles-web-developer-outdoor.jpg
-      </image:loc>
-      <image:title>Sifat Bhatia — Outdoor Hawaiian mountains portrait</image:title>
+      <image:loc>https://siftion.com/images/sifat-bhatia-los-angeles-web-developer-outdoor.jpg</image:loc>
+      <image:title>Sifat Bhatia — Web Developer Profile</image:title>
+      <image:caption>Sifat Bhatia is a full-stack developer from Los Angeles specializing in modern web applications</image:caption>
     </image:image>
+  </url>
 
+  <!-- Contact Page -->
+  <url>
+    <loc>https://siftion.com/contact</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Projects Page -->
+  <url>
+    <loc>https://siftion.com/projects</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Individual Project Pages -->
+  <!-- J. Worra Project -->
+  <url>
+    <loc>https://siftion.com/project/jworra</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/jworra.webp</image:loc>
+      <image:title>J. Worra - DJ Website by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- L'Affaire Musicale Project -->
+  <url>
+    <loc>https://siftion.com/project/laffairemusicale</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/laffairemusicale.webp</image:loc>
+      <image:title>L'Affaire Musicale Website - Web Development by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- Cherrytooth Project -->
+  <url>
+    <loc>https://siftion.com/project/cherrytooth</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/cherrytooth.webp</image:loc>
+      <image:title>Cherrytooth DJ Website - Developed by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- Star Consciousness Project -->
+  <url>
+    <loc>https://siftion.com/project/starconsciousness</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/starconsciousness.webp</image:loc>
+      <image:title>Star Consciousness Platform - Web Development by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- Siftion Project -->
+  <url>
+    <loc>https://siftion.com/project/siftion</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/images/siftion.png</image:loc>
+      <image:title>Siftion Content Platform - Developed by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- FilmFlow Project -->
+  <url>
+    <loc>https://siftion.com/project/filmflow</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/filmflow.webp</image:loc>
+      <image:title>FilmFlow Movie Platform - Web Development by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- Meowgen Project -->
+  <url>
+    <loc>https://siftion.com/project/meowgen</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/Meowgen.webp</image:loc>
+      <image:title>Meowgen AI Application - Developed by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- Pupgen Project -->
+  <url>
+    <loc>https://siftion.com/project/pupgen</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/Pupgen.webp</image:loc>
+      <image:title>Pupgen AI Application - Developed by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- PixSqueeze Project -->
+  <url>
+    <loc>https://siftion.com/project/pixsqueeze</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://siftion.com/webp/pixsqueeze.webp</image:loc>
+      <image:title>PixSqueeze Image Compression Tool - Developed by Sifat Bhatia</image:title>
+    </image:image>
+  </url>
+
+  <!-- Resume or Skills Page -->
+  <url>
+    <loc>https://siftion.com/skills</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

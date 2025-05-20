@@ -5,6 +5,7 @@ import homeIcon from './assets/home_48dp_E3E3E3_FILL0_wght100_GRAD200_opsz48.svg
 import casesIcon from './assets/cases_48dp_E3E3E3_FILL0_wght100_GRAD200_opsz48.svg';
 import mailIcon from './assets/mail_48dp_E3E3E3_FILL0_wght100_GRAD200_opsz48.svg';
 import LoadingSpinner from './components/common/LoadingSpinner';
+import SeoRichText from './components/SeoRichText';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -76,11 +77,14 @@ const AppContent = () => {
           />
         </div>
       </div>
-      <HeroSection />
-      <About />
-      <Projects />
-      <Footer />
-      <Analytics />
+      <div className="overflow-x-hidden">
+        <HeroSection />
+        <About />
+        <Projects />
+        <Footer />
+        <SeoRichText />
+        <Analytics />
+      </div>
     </div>
   );
 };
