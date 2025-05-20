@@ -1,0 +1,145 @@
+/* Pixy Mode Pixel-Art Theme */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Mattone';
+  src: url('./fonts/Mattone-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mattone';
+  src: url('./fonts/Mattone-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BaseNeueTrial';
+  src: url('./fonts/BaseNeueTrial-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  background: #030a1f;
+  color: #d1cdc2;
+  --tooltip-color: rgba(209, 205, 194, 0.9);
+}
+
+body {
+  margin: 0;
+  font-family: 'BaseNeueTrial', 'sans-serif;'
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a {
+  font-family: 'Mattone', 'sans-serif';
+  font-weight: 400;
+}
+
+/* Custom Scrollbar Styles */
+/* Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(209, 205, 194, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(209, 205, 194, 0.5);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(209, 205, 194, 0.3) transparent;
+}
+
+/* Edge */
+* {
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  -ms-overflow-style: none;
+}
+
+/* Base styles */
+body {
+  background: #030a1f;
+  color: #d1cdc2;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Add smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom form validation styles */
+input:invalid,
+textarea:invalid {
+  box-shadow: none;
+}
+
+/* Custom validation message */
+input:invalid:required,
+textarea:invalid:required {
+  background-image: linear-gradient(to right, rgba(209, 205, 194, 0.1), rgba(209, 205, 194, 0.05));
+}
+
+/* Remove default validation popup */
+input::-webkit-validation-bubble-message,
+input::-webkit-validation-bubble,
+input::-webkit-validation-bubble-arrow-clipper,
+textarea::-webkit-validation-bubble-message,
+textarea::-webkit-validation-bubble,
+textarea::-webkit-validation-bubble-arrow-clipper {
+  display: none;
+}
+
+input:invalid:required:focus::before,
+textarea:invalid:required:focus::before {
+  content: 'Please fill out this field';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  background-color: var(--tooltip-color);
+  color: #030a1f;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Logo animation styles */
+.transition-opacity {
+  transition-property: opacity;
+}
+
+.duration-800 {
+  transition-duration: 800ms;
+}
+

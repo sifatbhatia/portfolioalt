@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+  <url>
+    <loc>https://siftion.com/</loc>
+    <lastmod>2025-05-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+
+    <!-- en locale (keep if you serve i18n) -->
+    <xhtml:link rel="alternate" hreflang="en" href="https://siftion.com/" />
+
+    <!-- Image 1 -->
+    <image:image>
+      <image:loc>
+        https://siftion.com/images/sifat-bhatia-los-angeles-web-developer-portrait-bw.jpg
+      </image:loc>
+      <image:title>Sifat Bhatia — Architectural monochrome portrait</image:title>
+    </image:image>
+
+    <!-- Image 2 -->
+    <image:image>
+      <image:loc>
+        https://siftion.com/images/sifat-bhatia-los-angeles-web-developer-outdoor.jpg
+      </image:loc>
+      <image:title>Sifat Bhatia — Outdoor Hawaiian mountains portrait</image:title>
+    </image:image>
+
+  </url>
+</urlset>

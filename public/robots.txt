@@ -1,0 +1,18 @@
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /build/
+Disallow: /test/
+Disallow: /backup/
+Disallow: /temp/
+
+# Primary sitemap (contains image entries)
+Sitemap: https://siftion.com/sitemap.xml
+
+# Optional: extra sitemaps if you truly split them
+# Sitemap: https://siftion.com/sitemap-videos.xml
+
+# Host directive (Yandex only) – keep a single one
+Host: siftion.com
