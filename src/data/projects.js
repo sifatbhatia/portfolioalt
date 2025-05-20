@@ -108,7 +108,7 @@ const projects = [
     title: "FilmFlow",
     description: "Interactive platform for film enthusiasts to discover and organize movies",
     detailedDescription: "FilmFlow is a comprehensive movie discovery platform that helps users find, organize, and track films they want to watch. With a vast database of movies, personalized recommendations, and watchlist features, FilmFlow enhances the movie-watching experience for cinephiles and casual viewers alike.",
-    image: "/webp/FilmFlow.webp",
+    image: "/webp/filmflow.webp",
     technologies: ["React", "Redux", "Node.js", "MongoDB", "REST API"],
     link: "https://filmflow.siftion.com",
     features: [
@@ -177,7 +177,7 @@ const projects = [
     title: "PixSqueeze",
     description: "Online image compression tool that reduces file size while maintaining quality",
     detailedDescription: "PixSqueeze is a powerful yet simple-to-use online tool for compressing images without significant loss of quality. It's designed for web developers, designers, and content creators who need to optimize images for faster loading times. The platform supports various image formats and provides instant compression results.",
-    image: "/webp/PixSqueeze.webp",
+    image: "/webp/pixsqueeze.webp",
     technologies: ["JavaScript", "WebAssembly", "HTML5", "CSS3", "Node.js"],
     link: "https://pixsqueeze.siftion.com",
     features: [
