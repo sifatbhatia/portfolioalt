@@ -24,6 +24,7 @@
     "rollup-plugin-visualizer": "^5.14.0",
     "shadcn": "^2.3.0",
     "shadcn-ui": "^0.9.4",
+    "terser": "^5.39.2",
     "three": "^0.174.0",
     "vite-plugin-svgr": "^4.3.0"
   },
