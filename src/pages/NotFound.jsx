@@ -102,13 +102,13 @@ const NotFound = () => {
             </Link>
           </motion.div>
 
-          {/* 404 Text */}
-          <motion.h1 
-            className="text-7xl md:text-9xl font-bold mb-6 mt-8 text-white tracking-tight leading-none"
+          {/* 404 Image */}
+          <motion.div 
+            className="mb-6 mt-8"
             variants={item}
           >
-            404
-          </motion.h1>
+            <img src="/404.png" alt="404" className="w-48 md:w-64 filter drop-shadow-md" />
+          </motion.div>
 
           {/* Handwritten-style Images */}
           <div className="w-full max-w-3xl mx-auto my-8 md:my-12 relative flex flex-col items-center">
