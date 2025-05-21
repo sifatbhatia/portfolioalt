@@ -97,6 +97,7 @@ const Footer = lazy(() => import('./components/Footer'));
 const HamburgerMenu = lazy(() => import('./components/HamburgerMenu'));
 const SifatPersonSchema = lazy(() => import('./components/SEO/SifatPersonSchema'));
 const ProjectDetail = lazy(() => import('./components/ProjectDetail'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Main App component with Router
 function App() {
@@ -111,6 +112,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AppContent />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </Router>

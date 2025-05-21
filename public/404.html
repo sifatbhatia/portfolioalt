@@ -29,7 +29,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 2rem;
+      padding: 1.5rem;
       text-align: center;
       background-image: linear-gradient(135deg, rgba(3, 10, 31, 0.9), rgba(3, 10, 31, 0.95)), 
                         url('/images/sifat-bhatia-los-angeles-web-developer-outdoor.jpg');
@@ -39,23 +39,73 @@
     }
     
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 3rem;
-      border-radius: 1rem;
-      background: rgba(3, 10, 31, 0.9);
+      padding: 2rem;
+      border-radius: 1.5rem;
+      background: rgba(3, 10, 31, 0.85);
       backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .logo {
+      max-width: 120px;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      position: relative;
+      z-index: 5;
+    }
+    
+    .error-images {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 1rem 0 2rem;
+      max-width: 100%;
+      position: relative;
+    }
+    
+    .error-image {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    
+    .error-frame-2 {
+      max-width: 40%;
+      transform: rotate(-5deg) translateY(5px);
+      z-index: 2;
+    }
+    
+    .error-frame-3 {
+      max-width: 45%;
+      transform: rotate(5deg) translateY(-5px);
+      z-index: 1;
+    }
+    
+    .error-frame-2:hover, .error-frame-3:hover {
+      transform: scale(1.05) rotate(0);
+      z-index: 10;
+      box-shadow: 0 12px 32px rgba(79, 70, 229, 0.4);
     }
     
     h1 {
-      font-size: 6rem;
+      font-size: 4.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
       color: var(--accent-color);
       font-family: 'Mattone', 'Arial Black', sans-serif;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      position: relative;
+      z-index: 5;
     }
     
     h2 {
@@ -63,6 +113,8 @@
       margin-bottom: 1.5rem;
       color: var(--secondary-color);
       font-weight: 600;
+      position: relative;
+      z-index: 5;
     }
     
     p {
@@ -72,6 +124,18 @@
       margin-left: auto;
       margin-right: auto;
       color: rgba(255, 255, 255, 0.9);
+      position: relative;
+      z-index: 5;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin: 1rem 0;
+      position: relative;
+      z-index: 5;
     }
     
     .btn {
@@ -84,7 +148,6 @@
       font-weight: 600;
       transition: all 0.3s ease;
       border: 2px solid transparent;
-      margin: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-size: 0.875rem;
@@ -110,45 +173,86 @@
       border-color: var(--secondary-color);
     }
     
-    .logo {
-      max-width: 120px;
-      margin-bottom: 2rem;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    }
-    
     .error-code {
-      font-size: 1rem;
+      font-size: 0.875rem;
       font-family: 'Press Start 2P', monospace;
       color: rgba(255, 255, 255, 0.6);
       margin-top: 2rem;
       padding-top: 1rem;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 5;
+    }
+    
+    .glow {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(79, 70, 229, 0.4) 0%, rgba(79, 70, 229, 0) 70%);
+      border-radius: 50%;
+      filter: blur(20px);
+      opacity: 0.6;
+      z-index: 1;
+    }
+    
+    .glow-1 {
+      top: 20%;
+      left: 15%;
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .glow-2 {
+      bottom: 15%;
+      right: 20%;
+      animation: float 10s ease-in-out infinite 1s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.1); }
     }
     
     @media (max-width: 768px) {
       .container {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem;
         margin: 1rem;
       }
       
       h1 {
-        font-size: 4rem;
+        font-size: 3.5rem;
       }
       
       h2 {
         font-size: 1.5rem;
       }
       
-      .btn {
-        display: block;
+      .error-images {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .error-frame-2, .error-frame-3 {
+        max-width: 75%;
+        transform: rotate(0);
+      }
+      
+      .button-group {
+        flex-direction: column;
         width: 100%;
-        margin: 0.5rem 0;
+      }
+      
+      .btn {
+        width: 100%;
       }
     }
     
     @media (prefers-reduced-motion: reduce) {
-      .btn {
+      .btn, .error-image {
         transition: none;
+      }
+      
+      .glow {
+        animation: none;
       }
     }
   </style>
@@ -160,27 +264,51 @@
 </head>
 <body>
   <div class="container">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    
     <img src="/logo.svg" alt="Sifat Bhatia Logo" class="logo" width="120" height="40">
     <h1>404</h1>
     <h2>Page Not Found</h2>
-    <p>Oops! The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
+    
+    <div class="error-images">
+      <img src="/Frame 2.png" alt="Custom Frame 2" class="error-image error-frame-2">
+      <img src="/Frame 3.png" alt="Custom Frame 3" class="error-image error-frame-3">
+    </div>
+    
+    <p>Oops! The page you're looking for has wandered off. Let's get you back on track.</p>
+    
     <div class="button-group">
       <a href="/" class="btn">Return Home</a>
       <a href="/#projects" class="btn btn-outline">View Projects</a>
       <a href="mailto:hello@siftion.com" class="btn btn-outline">Contact Me</a>
     </div>
+    
     <div class="error-code">
       Error: 404 - Page Not Found
     </div>
   </div>
   
   <script>
-    // Simple animation on load
+    // Animation on load
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.querySelector('.container');
+      const frame2 = document.querySelector('.error-frame-2');
+      const frame3 = document.querySelector('.error-frame-3');
+      const elements = [container, frame2, frame3];
+      
+      // Set initial states
       container.style.opacity = '0';
       container.style.transform = 'translateY(20px)';
-      container.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      container.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+      
+      frame2.style.opacity = '0';
+      frame2.style.transform = 'rotate(-10deg) translateY(40px) translateX(-20px)';
+      frame2.style.transition = 'opacity 0.6s ease-out 0.2s, transform 0.8s ease-out 0.2s';
+      
+      frame3.style.opacity = '0';
+      frame3.style.transform = 'rotate(10deg) translateY(40px) translateX(20px)';
+      frame3.style.transition = 'opacity 0.6s ease-out 0.4s, transform 0.8s ease-out 0.4s';
       
       // Trigger reflow
       void container.offsetWidth;
@@ -188,6 +316,12 @@
       // Apply the visible state
       container.style.opacity = '1';
       container.style.transform = 'translateY(0)';
+      
+      frame2.style.opacity = '1';
+      frame2.style.transform = 'rotate(-5deg) translateY(5px)';
+      
+      frame3.style.opacity = '1';
+      frame3.style.transform = 'rotate(5deg) translateY(-5px)';
       
       // Add click animation to buttons
       const buttons = document.querySelectorAll('.btn');
@@ -197,6 +331,32 @@
           setTimeout(() => {
             e.target.style.transform = '';
           }, 200);
+        });
+      });
+      
+      // Add hover effect for images that works on touch devices too
+      const errorImages = document.querySelectorAll('.error-image');
+      errorImages.forEach(img => {
+        img.addEventListener('mouseover', function() {
+          errorImages.forEach(otherImg => {
+            if (otherImg !== img) {
+              otherImg.style.opacity = '0.7';
+              otherImg.style.transform = 'scale(0.95) rotate(0)';
+            }
+          });
+        });
+        
+        img.addEventListener('mouseout', function() {
+          errorImages.forEach(otherImg => {
+            if (otherImg !== img) {
+              otherImg.style.opacity = '1';
+              if (otherImg.classList.contains('error-frame-2')) {
+                otherImg.style.transform = 'rotate(-5deg) translateY(5px)';
+              } else if (otherImg.classList.contains('error-frame-3')) {
+                otherImg.style.transform = 'rotate(5deg) translateY(-5px)';
+              }
+            }
+          });
         });
       });
     });

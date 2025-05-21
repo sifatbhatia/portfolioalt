@@ -13,15 +13,95 @@ const HamburgerMenu = ({ menuItems = [], activeSection }) => {
 
   const handleItemClick = (e, href) => {
     e.preventDefault();
+    
+    // Handle different types of links
     if (href.startsWith('http')) {
+      // External links
       window.open(href, '_blank', 'noopener,noreferrer');
-    } else if (href.startsWith('/')) {
+    } else if (href.startsWith('/') && !href.includes('#')) {
+      // Regular internal links without hash
       navigate(href);
-    } else if (href.startsWith('#')) {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Handle hash links (both /#hash and #hash format)
+      let elementId = href;
+      
+      // Extract the hash part if format is /#home
+      if (href.includes('#')) {
+        elementId = '#' + href.split('#')[1];
       }
+      
+      // Check if we're already on the main page
+      const onMainPage = location.pathname === '/' || location.pathname === '';
+      
+      if (!onMainPage) {
+        // If not on the main page, navigate to the main page with hash
+        // When navigating from another page to the home page with a hash anchor
+        window.location.href = '/' + elementId;
+      } else {
+        // If we're already on the main page
+        const sectionId = elementId.replace('#', '');
+
+        // Find the element by ID
+        let targetElement = document.getElementById(sectionId);
+        
+        // If we found the element by ID, scroll to it
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        
+        // If we didn't find the element by ID, try to find Projects specifically
+        if (sectionId === 'projects') {
+          // Try different ways to find the projects section
+          targetElement = 
+            document.querySelector('.projects-section') || 
+            document.querySelector('[data-section="projects"]') ||
+            document.querySelector('section[id*="project"]') ||
+            [...document.querySelectorAll('h2')].find(h => 
+              h.textContent.toLowerCase().includes('project'))?.closest('section');
+
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+            return;
+          }
+        }
+        
+        // If we didn't find the element by ID, try to find Contact specifically
+        if (sectionId === 'contact') {
+          // Try different ways to find the contact section
+          targetElement = 
+            document.querySelector('.contact-section') || 
+            document.querySelector('[data-section="contact"]') ||
+            document.querySelector('section[id*="contact"]') ||
+            document.querySelector('footer') ||
+            [...document.querySelectorAll('h2')].find(h => 
+              h.textContent.toLowerCase().includes('contact'))?.closest('section');
+
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+            return;
+          }
+        }
+        
+        // Last resort - try to find any element with the section ID in its attributes or text
+        console.log(`Trying to find any element related to ${sectionId}`);
+        const possibleElements = [...document.querySelectorAll('*')].filter(el => 
+          el.id.includes(sectionId) || 
+          el.className.includes(sectionId) ||
+          el.textContent.toLowerCase().includes(sectionId)
+        );
+        
+        if (possibleElements.length > 0) {
+          // Sort by how close they are to being a section/container
+          const bestMatch = possibleElements.find(el => 
+            el.tagName === 'SECTION' || 
+            el.tagName === 'DIV' && (el.className.includes('section') || el.className.includes('container'))
+          ) || possibleElements[0];
+          
+          bestMatch.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      
       setIsOpen(false);
     }
   };

@@ -66,6 +66,7 @@ const Footer = () => {
 
   return (
     <motion.footer 
+      id="contact"
       ref={footerRef}
       initial={{ backgroundColor: '#030a1f' }}
       animate={{ 
@@ -77,7 +78,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
           {/* Left side */}
-          <div id="contact" className="space-y-8">
+          <div className="space-y-8">
             <h2 className="text-5xl md:text-6xl">Drop me a line</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
