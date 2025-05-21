@@ -102,33 +102,63 @@ const NotFound = () => {
             </Link>
           </motion.div>
 
-          {/* 404 Image */}
-          <motion.div 
-            className="mb-6 mt-8"
-            variants={item}
-          >
-            <img src="/404.png" alt="404" className="w-48 md:w-64 filter drop-shadow-md" />
-          </motion.div>
+          {/* Desktop layout - horizontal arrangement with better spacing */}
+          <div className="w-full max-w-5xl mx-auto mt-16 mb-8 relative">
+            {/* Desktop layout */}
+            <div className="hidden md:flex justify-center items-center gap-12 relative">
+              {/* Left side - 404 image with glow effect */}
+              <motion.div 
+                className="relative"
+                variants={item}
+                whileHover={{ scale: 1.05, rotate: -2 }}
+                transition={{ type: "spring" }}
+              >
+                <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-xl -z-1 animate-pulse"></div>
+                <img src="/404.png" alt="404" className="w-64 filter drop-shadow-lg relative z-10" />
+              </motion.div>
+              
+              {/* Right side - Not found message */}
+              <motion.div
+                className="flex-1 max-w-md"
+                initial="hidden"
+                animate="visible"
+                variants={imageVariant}
+              >
+                <img 
+                  src="/not-found.png" 
+                  alt="Not found" 
+                  className="max-w-full h-auto filter drop-shadow-md"
+                />
+              </motion.div>
+            </div>
 
-          {/* Handwritten-style Images */}
-          <div className="w-full max-w-3xl mx-auto my-8 md:my-12 relative flex flex-col items-center">
-            {/* Not found image */}
-            <motion.div
-              className="mb-6 md:mb-10"
-              initial="hidden"
-              animate="visible"
-              variants={imageVariant}
-            >
-              <img 
-                src="/not-found.png" 
-                alt="Not found" 
-                className="max-w-full h-auto"
-              />
-            </motion.div>
+            {/* Mobile layout - vertical stacking */}
+            <div className="md:hidden flex flex-col items-center space-y-8">
+              {/* 404 Image for mobile */}
+              <motion.div 
+                className="mt-6"
+                variants={item}
+              >
+                <img src="/404.png" alt="404" className="w-40 filter drop-shadow-md" />
+              </motion.div>
+              
+              {/* Not found image for mobile */}
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={imageVariant}
+              >
+                <img 
+                  src="/not-found.png" 
+                  alt="Not found" 
+                  className="max-w-full h-auto"
+                />
+              </motion.div>
+            </div>
 
             {/* Arrow and Go Back - now clickable */}
             <motion.div
-              className="mt-2 cursor-pointer"
+              className="mt-8 cursor-pointer"
               initial="hidden"
               animate="visible"
               variants={imageVariant}
