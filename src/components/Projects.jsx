@@ -1,142 +1,111 @@
-import React, { useState, useEffect, useCallback, memo, useMemo } from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import projects from '../data/projects';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
+// Simple placeholder image component for better loading experience
+const PlaceholderImage = () => (
+  <div className="absolute inset-0 bg-gray-900/50 animate-bounce" />
+);
+
+/**
+ * Projects component that displays a grid of project cards
+ * Following React patterns:
+ * - UI as thin wrapper over data
+ * - Minimal state usage
+ * - Explicit logic over implicit reactions
+ * - CSS for hover states where possible
+ */
 const Projects = () => {
   // Check if user prefers reduced motion
   const prefersReducedMotion = useReducedMotion();
   
-  // Simplified animation variants when reduced motion is preferred
-  const containerVariants = useMemo(() => ({
-    hidden: { opacity: prefersReducedMotion ? 0.9 : 0 },
-    visible: {
-      opacity: 1,
+  // Use custom hook instead of useState + useEffect
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  
+  // Animation variants for hover effects only
+  const itemVariants = {
+    hover: {
+      y: -3,
       transition: { 
-        staggerChildren: prefersReducedMotion ? 0.03 : 0.08,
-        when: "beforeChildren",
-        duration: 0.5
-      }
+        type: "tween",
+        duration: 0.1,
+        ease: "easeInOut"
+      } 
     }
-  }), [prefersReducedMotion]);
-
-  const itemVariants = useMemo(() => ({
-    hidden: { 
-      opacity: prefersReducedMotion ? 0.9 : 0, 
-      y: prefersReducedMotion ? 5 : 20
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { 
-        type: prefersReducedMotion ? 'tween' : 'spring',
-        stiffness: 200, 
-        damping: 20,
-        duration: prefersReducedMotion ? 0.2 : 0.4
-      }
-    }
-  }), [prefersReducedMotion]);
-
-  // Memoize project data processing
+  };
+  
+  // Memoize filtered projects to prevent recalculation on every render
   const { featuredProjects, miscProjects } = useMemo(() => {
-    // Filter projects into featured and misc
-    const featured = projects.filter(project => project.featured);
-    const misc = projects.filter(project => !project.featured);
-    
-    // Sort projects by date (newest first)
-    return { 
-      featuredProjects: [...featured].sort((a, b) => new Date(b.date) - new Date(a.date)),
-      miscProjects: [...misc].sort((a, b) => new Date(b.date) - new Date(a.date))
+    const uniqueProjects = Array.from(new Map(projects.map(project => [project.slug, project])).values());
+    return {
+      featuredProjects: uniqueProjects.filter(project => project.featured || false),
+      miscProjects: uniqueProjects.filter(project => !project.featured)
     };
-  }, []);
+  }, [projects]);
   
-  // Mobile state detection with debouncing
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    
-    // Debounced resize handler for better performance
-    let resizeTimer;
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(checkMobile, 100);
-    };
-    
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => {
-      clearTimeout(resizeTimer);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // Memoize the project list to prevent unnecessary re-renders
+  const projectList = useMemo(() => 
+    [...featuredProjects, ...miscProjects], 
+    [featuredProjects, miscProjects]
+  );
 
-  // Optimized ProjectCard component
-  const ProjectCard = memo(({ project, index }) => {
-    const [isHovered, setIsHovered] = useState(false);
+  // ProjectCard component with optimized animations
+  const ProjectCard = memo(({ project, staggerIndex }) => {
     const prefersReducedMotion = useReducedMotion();
+    const [imageLoaded, setImageLoaded] = React.useState(false);
     
-    // Use callbacks for event handlers
-    const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-    const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+    // Memoize the image load handler
+    const handleImageLoad = useCallback(() => {
+      setImageLoaded(true);
+    }, []);
     
-    // Styles that change on hover - separating them out reduces rerenders
-    const imageStyles = {
-      filter: isHovered ? 'brightness(0.5) contrast(1.1)' : 'brightness(0.3) grayscale(0.6)',
-      transform: prefersReducedMotion ? 'scale(1)' : (isHovered ? 'scale(1.05)' : 'scale(1)'),
-      willChange: 'filter, transform',
-      transitionProperty: 'filter, transform',
-      transitionDuration: '0.3s',
-      transitionTimingFunction: 'ease-out'
+    // Simple hover animation that's less likely to cause glitches
+    const hoverAnimation = prefersReducedMotion ? {} : { 
+      y: -3, // Reduced from -5 for better performance
+      transition: { 
+        type: "tween",
+        duration: 0.1,
+        ease: "easeOut"
+      } 
     };
-    
-    const cardStyles = {
-      transform: isHovered ? 'scale(1.02)' : 'scale(1)',
-      borderRadius: isHovered ? '16px' : '12px',
-      boxShadow: isHovered ? '0 10px 30px -10px rgba(0, 0, 0, 0.3)' : '0 5px 15px -10px rgba(0, 0, 0, 0.2)',
-      transition: 'transform 0.3s ease-out, border-radius 0.3s ease-out, box-shadow 0.3s ease-out'
-    };
-    
     return (
       <motion.article 
-        className="w-full"
+        className="w-full project-card"
+        custom={staggerIndex} // Stagger delay based on index
         variants={itemVariants}
         initial="hidden"
         animate="visible"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        whileHover={prefersReducedMotion ? {} : { y: -5 }}
+        whileHover="hover"
+        viewport={{ once: true, margin: "-50px" }}
         layout={false}
       >
-        <div 
-          className="relative aspect-[16/9] bg-black overflow-hidden rounded-xl md:rounded-2xl shadow-xl"
-          style={cardStyles}
-        >
-          {/* Background Image */}
+        <div className="relative aspect-[16/9] bg-gray-900/50 overflow-hidden rounded-xl md:rounded-2xl shadow-xl project-card-container">
+          {/* Background Image with optimized loading */}
           <div className="absolute inset-0 w-full h-full overflow-hidden">
+            {!imageLoaded && <PlaceholderImage />}
             <img
               src={project.image}
               alt={project.title}
-              className="w-full h-full object-cover rounded-xl md:rounded-2xl"
-              style={imageStyles}
+              className={`w-full h-full object-cover rounded-xl md:rounded-2xl project-image transition-opacity duration-300 ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={handleImageLoad}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = '/placeholder.jpg';
               }}
-              loading="lazy"
-              decoding="async"
+              width={800}
+              height={450}
+              style={{
+                willChange: 'transform, opacity'
+              }}
             />
           </div>
           
           {/* Content Overlay */}
-          <div 
-            className="absolute inset-0 p-6 flex flex-col justify-end"
-            style={{
-              background: 'linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 60%)',
-              opacity: isHovered ? 1 : 0.85,
-              transition: 'opacity 0.3s ease-out'
-            }}
-          >
+          <div className="absolute inset-0 p-6 flex flex-col justify-end content-overlay">
             {/* Title and Year */}
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-2xl md:text-3xl font-bold text-white">
@@ -147,48 +116,26 @@ const Projects = () => {
               )}
             </div>
             
-            {/* Description */}
-            <p 
-              className="text-white/80 text-sm leading-relaxed mb-4"
-              style={{ 
-                opacity: isHovered ? 1 : 0.7,
-                maxHeight: isHovered ? '4.5rem' : '3rem',
-                overflow: 'hidden',
-                transition: 'opacity 0.3s, max-height 0.3s'
-              }}
-            >
+            {/* Description - CSS class handles hover effects */}
+            <p className="text-white/80 text-sm leading-relaxed mb-4 project-description">
               {project.description}
             </p>
             
             {/* Technologies and Link */}
             <div className="flex items-center justify-between">
-              {/* Tech Pills */}
+              {/* Tech Pills - Using CSS classes for hover effects */}
               {project.technologies && project.technologies.length > 0 && (
                 <div className="flex gap-2">
                   {project.technologies.slice(0, 2).map((tech, i) => (
                     <span 
                       key={i} 
-                      className="text-xs px-2 py-1 border border-white/20 text-white/80 rounded-full"
-                      style={{
-                        backgroundColor: isHovered ? 'rgba(220, 38, 38, 0.2)' : 'transparent',
-                        transform: isHovered ? 'translateY(0)' : 'translateY(2px)',
-                        opacity: isHovered ? 1 : 0.8,
-                        transition: 'transform 0.3s, opacity 0.3s, background-color 0.3s'
-                      }}
+                      className="text-xs px-2 py-1 border border-white/20 text-white/80 rounded-full tech-pill"
                     >
                       {tech}
                     </span>
                   ))}
                   {project.technologies.length > 2 && (
-                    <span 
-                      className="text-xs px-2 py-1 border border-white/20 text-white/80 rounded-full"
-                      style={{
-                        backgroundColor: isHovered ? 'rgba(220, 38, 38, 0.2)' : 'transparent',
-                        transform: isHovered ? 'translateY(0)' : 'translateY(2px)',
-                        opacity: isHovered ? 1 : 0.8,
-                        transition: 'transform 0.3s, opacity 0.3s, background-color 0.3s'
-                      }}
-                    >
+                    <span className="text-xs px-2 py-1 border border-white/20 text-white/80 rounded-full tech-pill">
                       +{project.technologies.length - 2}
                     </span>
                   )}
@@ -223,12 +170,87 @@ const Projects = () => {
       </motion.article>
     );
   }, (prevProps, nextProps) => {
-    // Only re-render if project ID changes
+    // Perform strict equality check on project ID to minimize renders
     return prevProps.project.id === nextProps.project.id;
   });
 
+  // Optimized CSS for better performance
+  const cssStyles = `
+    .project-card-container {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      perspective: 1000px;
+      will-change: transform, box-shadow;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .project-card:hover .project-card-container {
+      transform: translate3d(0, -4px, 0) scale(1.01);
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.25);
+    }
+    
+    .project-image {
+      filter: brightness(0.3) grayscale(0.6);
+      transform: translateZ(0) scale(1);
+      will-change: transform, filter;
+      transition: filter 0.3s ease-out, transform 0.3s ease-out;
+      backface-visibility: hidden;
+    }
+    
+    .project-card:hover .project-image {
+      filter: brightness(0.5) contrast(1.1);
+      transform: scale(1.05);
+    }
+    
+    .content-overlay {
+      background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 60%);
+      opacity: 0.85;
+      transition: opacity 0.3s ease-out;
+    }
+    
+    .project-card:hover .content-overlay {
+      opacity: 1;
+    }
+    
+    .project-description {
+      opacity: 0.7;
+      max-height: 3rem;
+      overflow: hidden;
+      transition: opacity 0.3s, max-height 0.3s;
+    }
+    
+    .project-card:hover .project-description {
+      opacity: 1;
+      max-height: 4.5rem;
+    }
+    
+    .tech-pill {
+      background-color: transparent;
+      transition: all 0.2s ease-out;
+      transform: translateY(2px);
+      opacity: 0.8;
+    }
+    
+    .project-card:hover .tech-pill {
+      background-color: rgba(220, 38, 38, 0.2);
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    /* Optimize for reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }`;
+
   return (
     <section id="projects" className="py-24 bg-[#bfbde1]">
+      <style>{cssStyles}</style>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <motion.header 
@@ -247,31 +269,24 @@ const Projects = () => {
         </motion.header>
 
         {/* Projects Grid - With render optimizations */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          layout={false}
-        >
-          {/* Featured Projects */}
-          {featuredProjects.map((project, index) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
-              index={index} 
-            />
-          ))}
-          
-          {/* Misc Projects */}
-          {miscProjects.map((project, index) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
-              index={index + featuredProjects.length} 
-            />
-          ))}
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {/* Optimized project list rendering */}
+          {projectList.map((project) => {
+            const uniqueKey = project.id + '-' + project.slug;
+            
+            return (
+              <motion.div 
+                key={uniqueKey}
+                whileHover="hover"
+                variants={itemVariants}
+              >
+                <ProjectCard 
+                  project={project}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

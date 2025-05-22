@@ -112,6 +112,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AppContent />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />
+          <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

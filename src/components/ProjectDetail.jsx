@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
@@ -10,12 +10,39 @@ import mailIcon from '../assets/mail_48dp_E3E3E3_FILL0_wght100_GRAD200_opsz48.sv
 // Lazy load the hamburger menu
 const HamburgerMenu = lazy(() => import('./HamburgerMenu'));
 
+/**
+ * ProjectDetail component following modern React patterns:
+ * - Minimal use of state (only when truly necessary for UI reactivity)
+ * - Pure data transformations instead of state + effects
+ * - CSS for visual transitions instead of state + inline styles
+ * - Simple, explicit logic instead of complex implicit effects
+ */
 const ProjectDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [activeSection, setActiveSection] = useState('projects'); // Default active section
-  const project = projects.find(p => p.slug === slug) || projects[0];
+  
+  // Find the project or redirect to 404 if not found
+  const project = projects.find(p => p.slug === slug);
+  
+  // Redirect to 404 if project not found
+  React.useEffect(() => {
+    if (!project) {
+      navigate('/404', { replace: true });
+    }
+  }, [project, navigate]);
+  
+  // If no project found (will redirect), show loading
+  if (!project) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#aeaccd] to-[#aeaccd]">
+        <div className="w-12 h-12 border-4 border-[#0c1a3d] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+  
+  // Default active section - since this doesn't change based on UI interaction,
+  // it doesn't need to be in state
+  const activeSection = 'projects';
 
   const handwritingVariant = {
     hidden: { opacity: 0, pathLength: 0 },
@@ -223,32 +250,39 @@ const ProjectDetail = () => {
     );
   }
 
-  // Function to handle image errors
-  const handleImageError = (e) => {
-    e.target.onerror = null;
-    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNDUwIiB2aWV3Qm94PSIwIDAgODAwIDQ1MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2QxY2RjMiIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMzAxMmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPg==';
-    e.target.className = 'w-full h-full object-contain bg-gray-100 p-8';
-    setImageLoaded(true);
-  };
-
-  // Create a SVG path for handwritten title
-  const createTitlePath = (title) => {
-    // This is a simplified approach - in a real implementation,
-    // you might use a more sophisticated algorithm or library
-    // to generate natural-looking handwritten paths
-    const baseX = 150;
-    const baseY = 50;
-    let path = `M${baseX} ${baseY} `;
-    
-    // Very simple simulation of handwriting
-    for (let i = 0; i < title.length; i++) {
-      const charX = baseX + (i * 12);
-      const charY = baseY + (Math.sin(i) * 3);
-      path += `L${charX} ${charY} `;
+  // Image fallback URL as a constant - no need to generate it repeatedly
+  const FALLBACK_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNDUwIiB2aWV3Qm94PSIwIDAgODAwIDQ1MCI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2QxY2RjMiIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMwMzAxMmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPg==';
+  
+  // CSS for handling image loading state - using classes instead of state
+  const imageStyles = `
+    .project-image {
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
     }
-    
-    return path;
-  };
+    .project-image.loaded {
+      opacity: 1;
+    }
+    .image-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.5rem;
+      background-color: #18181b;
+    }
+    .image-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #18181b;
+      z-index: 10;
+      transition: opacity 0.3s ease-out;
+    }
+    .image-container.loaded .image-loader {
+      opacity: 0;
+      pointer-events: none;
+    }
+  `;
 
   return (
     <motion.div 
@@ -257,7 +291,10 @@ const ProjectDetail = () => {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-black text-white"
     >
-      {/* Hamburger Menu */}
+      {/* Add styles for image loading using CSS instead of state */}
+      <style>{imageStyles}</style>
+      
+      {/* Hamburger Menu - no need for state here */}
       <div className="fixed bottom-6 right-6 z-50 pointer-events-none flex flex-col items-end gap-4">
         <div className="pointer-events-auto">
           <Suspense fallback={<div></div>}>
@@ -272,6 +309,7 @@ const ProjectDetail = () => {
           </Suspense>
         </div>
       </div>
+      
       {/* Logo in top left */}
       <motion.div 
         className="fixed top-5 left-5 sm:top-8 sm:left-8 z-20"
@@ -310,26 +348,34 @@ const ProjectDetail = () => {
             </p>
           </motion.div>
 
-          {/* Image Section with Loading Animation - more minimalist */}
+          {/* Image Section with Loading Animation - using CSS instead of state */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="relative mb-14 overflow-hidden rounded-lg"
           >
-            {!imageLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10">
+            <div className="image-container" id="image-container">
+              <div className="image-loader">
                 <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin opacity-70"></div>
               </div>
-            )}
-            <img
-              src={project.image || ''}
-              alt={project.title}
-              className="w-full h-auto object-cover aspect-video bg-zinc-900 border border-zinc-800"
-              onLoad={() => setImageLoaded(true)}
-              onError={handleImageError}
-              loading="lazy"
-            />
+              <img
+                src={project.image || ''}
+                alt={project.title}
+                className="project-image w-full h-auto object-cover aspect-video bg-zinc-900 border border-zinc-800"
+                onLoad={(e) => {
+                  e.target.classList.add('loaded');
+                  e.target.parentElement.classList.add('loaded');
+                }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = FALLBACK_IMAGE;
+                  e.target.className = 'w-full h-full object-contain bg-gray-100 p-8 loaded';
+                  e.target.parentElement.classList.add('loaded');
+                }}
+                loading="lazy"
+              />
+            </div>
           </motion.div>
           
           {/* Technologies Section - Minimal Style */}
@@ -481,36 +527,35 @@ const ProjectDetail = () => {
         </div>
       </div>
 
-      {/* Site Preview Modal - Fixed lint errors with CSS classes */}
+      {/* Site Preview Modal - Using a more functional approach that doesn't depend on DOM queries */}
       {project.slug === "cherrytooth" && (
-        <div id="sitePreviewModal" className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 items-center justify-center p-4 hidden">
-          <div className="relative w-full max-w-5xl max-h-[90vh] flex flex-col">
-            {/* Close button */}
-            <button 
-              onClick={() => {
-                document.getElementById('sitePreviewModal').classList.add('hidden');
-              }}
-              className="absolute -top-12 right-0 text-white/80 hover:text-white p-2 z-10"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
-            {/* Modal header */}
-            <div className="text-white text-center mb-4">
-              <h3 className="text-lg font-medium">Cherrytooth Site Preview</h3>
-              <p className="text-white/60 text-sm">Scroll to view the entire site</p>
-            </div>
-            
-            {/* Scrollable image container */}
-            <div className="overflow-y-auto border border-zinc-800 rounded-lg flex-1 bg-zinc-900">
-              <div className="flex justify-center min-h-full">
-                <img 
-                  src={project.image2 || "/images/cherrytooth.png"} 
-                  alt="Cherrytooth website preview" 
-                  className="max-w-full h-auto object-contain"
-                />
+        <div id="sitePreviewModal" className="fixed inset-0 z-50 bg-black/80 p-4 hidden overflow-y-auto">
+          <div className="relative w-full max-w-5xl mx-auto mt-10 mb-10">
+            <div className="bg-zinc-900 rounded-lg overflow-hidden shadow-xl border border-zinc-800">
+              <div className="flex justify-between items-center p-4 border-b border-zinc-800">
+                <h3 className="text-lg font-medium">Site Preview</h3>
+                <button 
+                  onClick={() => {
+                    const modal = document.getElementById('sitePreviewModal');
+                    if (modal) modal.classList.add('hidden');
+                  }}
+                  className="text-gray-400 hover:text-white"
+                  aria-label="Close modal"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-6">
+                <div className="bg-zinc-800 rounded overflow-hidden">
+                  <img 
+                    src={project.image2 || project.image} 
+                    alt={project.title} 
+                    className="w-full h-auto" 
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
           </div>

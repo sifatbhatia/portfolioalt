@@ -103,6 +103,56 @@ const projects = [
   },
   {
     id: 4,
+    slug: "beatsbrewcoffee",
+    title: "Beats & Brew Coffee",
+    description: "Web design and development for a specialty coffee shop combining music and coffee culture",
+    detailedDescription: "Beats & Brew Coffee is a specialty coffee shop that uniquely blends coffee culture with music appreciation. The website showcases their artisanal coffee offerings, in-store music events, and the overall brand experience. The design emphasizes the fusion of coffee craftsmanship and musical elements that define this unique establishment.",
+    image: "/images/beatsbrewcoffee.png",
+    technologies: ["HTML", "CSS", "JavaScript", "Responsive Design", "UI/UX Design"],
+    link: "https://www.behance.net/gallery/210305165/Beats-Brew-Coffee",
+    features: [
+      "Immersive visual presentation of the coffee shop's atmosphere",
+      "Menu showcase with detailed product descriptions",
+      "Events calendar for music performances and coffee tastings",
+      "Gallery of the shop's interior and products",
+      "Mobile-responsive design for all devices",
+      "Contact information and location map"
+    ],
+    challenges: [
+      "Balancing visual elements to represent both coffee and music aspects",
+      "Creating an intuitive navigation system for diverse content",
+      "Optimizing image-heavy design for fast loading",
+      "Implementing responsive design for various screen sizes",
+      "Conveying the unique brand personality through web design"
+    ]
+  },
+  {
+    id: 5,
+    slug: "interpadel",
+    title: "Inter Padel Club",
+    description: "Web design and development for a premium padel tennis club featuring booking system and membership management",
+    detailedDescription: "Inter Padel Club is a premium sports facility dedicated to padel tennis, an increasingly popular racquet sport. The website serves as the digital hub for the club, offering court booking functionality, membership information, tournament schedules, and coaching services. The design reflects the modern and dynamic nature of the sport while providing practical functionality for members and visitors.",
+    image: "/images/inter.png",
+    technologies: ["HTML", "CSS", "JavaScript", "Booking System", "Responsive Design"],
+    link: "https://www.behance.net/gallery/209239465/Inter-Padel-Club",
+    features: [
+      "Online court booking and reservation system",
+      "Membership registration and account management",
+      "Tournament and event calendar",
+      "Coach profiles and lesson booking",
+      "Photo gallery of facilities and events",
+      "Responsive design optimized for mobile booking"
+    ],
+    challenges: [
+      "Implementing an intuitive court booking interface",
+      "Creating a streamlined membership registration process",
+      "Designing a visually appealing yet functional sports website",
+      "Balancing information density with clean design principles",
+      "Ensuring accessibility for users of all technical abilities"
+    ]
+  },
+  {
+    id: 6,
     category: "misc",
     slug: "filmflow",
     title: "FilmFlow",
@@ -126,7 +176,7 @@ const projects = [
     ]
   },
   {
-    id: 5,
+    id: 7,
     slug: "meowgen",
     title: "Meowgen",
     description: "AI-powered cat image generator using machine learning to create unique cat pictures",
@@ -149,7 +199,7 @@ const projects = [
     ]
   },
   {
-    id: 6,
+    id: 8,
     slug: "pupgen",
     title: "Pupgen",
     description: "AI-powered dog image generator creating unique and adorable dog pictures",
@@ -172,7 +222,7 @@ const projects = [
     ]
   },
   {
-    id: 6,
+    id: 9,
     slug: "pixsqueeze",
     title: "PixSqueeze",
     description: "Online image compression tool that reduces file size while maintaining quality",
@@ -193,7 +243,8 @@ const projects = [
       "Cross-browser compatibility",
       "Client-side processing for privacy"
     ]
-  }
+  },
+  
 ];
 
 export default projects;
